@@ -10,6 +10,7 @@
 
 #include "../include/path.hpp"
 #include "../include/constants.hpp"
+#include "../include/cart.hpp"
 
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 600
@@ -22,23 +23,17 @@ int main()
 	RenderWindow window(VideoMode(SCREENWIDTH, SCREENHEIGHT), "Rollercoaster");
 
 	Path path(
-		[](real x)->real{return 3.f/800.f*(x-400)*(x-400);}
+		[](real x)->real 
+		{
+			return 1.f/12800000.f*pow(x,4)-1.f/8000.f*pow(x,3)+103.f/1600.f*pow(x,2)-23.f/2.f*x+600;
+		}
 	);
 
-	real x = EPSILON;
-	real g = 100;
-	real m = 1;
-
-	real trackOffset = -600;
-	real cartOffset = 10;
+	real trackOffset = -530;
+	real cartOffset = 0;
 	real plotInterval = 0.1f;
 
-	real TE = m*g*path.getHeight(0);
-
-	real PE = m*g*path.getHeight(x);
-	real KE = TE-PE; 
-
-	real dir = 1;
+	Cart cartObj(1, 500, 0, path);
 
 	real dt = 0;
 
@@ -52,8 +47,6 @@ int main()
 	cart.setFillColor(Color::Blue);
 	cart.setOrigin(Vector2f(cart.getLocalBounds().width/2, cart.getLocalBounds().height/2));
 
-	real lastX = x;
-
 	while (window.isOpen())
 	{
 		Event event;
@@ -65,25 +58,10 @@ int main()
 			}
 		}
 
-		PE = m*g*path.getHeight(x);
-		KE = TE-PE;
-
-		if (KE < 0)
-		{
-			//cout << "a" <<endl;
-			x = lastX;
-			dir *= -1;
-			PE = m*g*path.getHeight(x);
-			KE = TE-PE;
-		}
-
-		real v = sqrt(2*KE);
-		real slope = path.getSlope(x);
 		dt = dtClock.restart().asSeconds();
-		lastX = x;
-		x += v*dt*dir/sqrt(1+slope*slope);
+		cartObj.update(dt);
 
-		//cout << path.getHeight(x) << endl;
+		//cout << path.getHeight(cartObj.getX()) << endl;
 
 		window.clear(Color::Black);
 
@@ -93,7 +71,7 @@ int main()
 			window.draw(dot);
 		}
 
-		cart.setPosition(Vector2f(x, -path.getHeight(x)-trackOffset-cartOffset));
+		cart.setPosition(cartObj.getX(), -path.getHeight(cartObj.getX())-trackOffset-cartOffset);
 		window.draw(cart);
 
 		window.display();

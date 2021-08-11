@@ -23,10 +23,12 @@ class Path
 {
 	public:
 		Path(function<real(real)> f) : f(f) {};
+		Path(const Path& path);
+		Path& operator=(const Path& path);
 
 		void setFunction(function<real(real)> f);
-		real getHeight(real x);
-		real getSlope(real x);
+		real getHeight(real x) const;
+		real getSlope(real x) const;
 
 	private:
 		function<real(real)> f;
