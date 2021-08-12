@@ -13,6 +13,7 @@ class Cart
 		void setG(real g);
 		void setPath(const Path& path);
 
+		void calcTE();
 		void reset();
 		void update(real dt);
 

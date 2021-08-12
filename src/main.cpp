@@ -1,4 +1,5 @@
 #include <SFML/System/Clock.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 #include <cmath>
 #include <functional>
@@ -29,11 +30,12 @@ int main()
 		}
 	);
 
-	real trackOffset = -530;
+	real trackOffset = -600;
+	real trackScale = 1;
 	real cartOffset = 0;
 	real plotInterval = 0.1f;
 
-	Cart cartObj(1, 500, 0, path);
+	Cart cartObj(1, 100, 0, path);
 
 	real dt = 0;
 
@@ -52,9 +54,44 @@ int main()
 		Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == Event::Closed)
+			switch (event.type)
 			{
-				window.close();
+				case Event::Closed:
+					window.close();
+					break;
+
+				case Event::KeyPressed:
+					switch (event.key.code)
+					{
+						case Keyboard::Up:
+							trackScale += 0.01;
+							break;
+						case Keyboard::Down:
+							trackScale -= 0.01;
+							break;
+						case Keyboard::Left:
+							trackOffset += 1;
+							break;
+						case Keyboard::Right:
+							trackOffset -= 1;
+							break;
+						case Keyboard::Q:
+							cartObj.setG(cartObj.getG()+10);
+							break;
+						case Keyboard::W:
+							cartObj.setG(cartObj.getG()-10);
+							break;
+						case Keyboard::E:
+							cartObj.setMass(cartObj.getMass()+10);
+							break;
+						case Keyboard::R:
+							cartObj.setMass(cartObj.getMass()-10);
+							break;
+						default: break;
+					}
+					break;
+
+				default: break;
 			}
 		}
 
@@ -67,11 +104,11 @@ int main()
 
 		for (real i=0;i<SCREENWIDTH;i+=plotInterval)
 		{
-			dot.setPosition(Vector2f(i, -path.getHeight(i)-trackOffset));
+			dot.setPosition(Vector2f(i, -trackScale*path.getHeight(i)-trackOffset));
 			window.draw(dot);
 		}
 
-		cart.setPosition(cartObj.getX(), -path.getHeight(cartObj.getX())-trackOffset-cartOffset);
+		cart.setPosition(cartObj.getX(), -trackScale*path.getHeight(cartObj.getX())-trackOffset-cartOffset);
 		window.draw(cart);
 
 		window.display();
