@@ -5,27 +5,27 @@
 
 using namespace std;
 
-real calcPE(real height, real mass, real g)
+double calcPE(double height, double mass, double g)
 {
 	return height*mass*g;
 }
 
-real calcPE(const Cart& cart)
+double calcPE(const Cart& cart)
 {
 	return calcPE(cart.getPath().getHeight(cart.getX()), cart.getMass(), cart.getG());
 }
 
-real calcKE(real TE, real PE)
+double calcKE(double TE, double PE)
 {
 	return TE - PE;
 }
 
-real calcKE(const Cart& cart)
+double calcKE(const Cart& cart)
 {
 	return calcKE(cart.getTE(), calcPE(cart));
 }
 
-void Cart::setG(real g)
+void Cart::setG(double g)
 {
 	if (g > 0)
 	{
@@ -34,7 +34,7 @@ void Cart::setG(real g)
 	}
 }
 
-void Cart::setMass(real mass)
+void Cart::setMass(double mass)
 {
 	if (mass > 0)
 	{
@@ -49,27 +49,27 @@ void Cart::setPath(const Path &path)
 	calcTE();
 }
 
-real Cart::getX() const
+double Cart::getX() const
 {
 	return x;
 }
 
-real Cart::getMass() const
+double Cart::getMass() const
 {
 	return mass;
 }
 
-real Cart::getG() const
+double Cart::getG() const
 {
 	return g;
 }
 
-real Cart::getTE() const
+double Cart::getTE() const
 {
 	return TE;
 }
 
-real Cart::getV() const
+double Cart::getV() const
 {
 	return v;
 }
@@ -92,7 +92,7 @@ void Cart::reset()
 	dir = 1;
 }
 
-void Cart::update(real dt)
+void Cart::update(double dt)
 {
 	if (calcKE(*this) < 0)
 	{
@@ -105,7 +105,7 @@ void Cart::update(real dt)
 	//cout << KE << endl;
 
 	v = sqrt(2*KE/mass);
-	real slope = path.getSlope(x);
+	double slope = path.getSlope(x);
 	lastX = x;
 	x += v*dt*dir/sqrt(1+slope*slope);
 }

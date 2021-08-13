@@ -3,6 +3,6 @@
 
 #define EPSILON 0.001
 
-typedef double real;
+//typedef double real;
 
 #endif
