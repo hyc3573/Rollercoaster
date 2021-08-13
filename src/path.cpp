@@ -13,6 +13,11 @@ void Path::setFunction(string s)
 	this->f.setString(s);
 }
 
+string Path::getFunction()
+{
+	return this->f.getString();
+}
+
 double Path::getHeight(double x)
 {
 	return f(x);

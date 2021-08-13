@@ -45,10 +45,12 @@ class StrFunction
 
 		void setString(string s)
 		{
+			string tmp = this->s;
 			this->s = s;
 			if (!parser.compile(s, expression))
 			{
 				cout << "Compile Error!" << endl;
+				this->s = tmp;
 			}
 		}
 
@@ -87,6 +89,7 @@ class Path
 		Path& operator=(const Path& path);
 
 		void setFunction(string s);
+		string getFunction();
 		double getHeight(double x);
 		double getSlope(double x);
 

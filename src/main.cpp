@@ -36,7 +36,7 @@ int main()
 	gui.setTarget(window);
 
 	Path path(
-			"1.0/12800000.0*x^4-1.0/8000.0*x^3+103.0/1600.0*x^2-23.0/2.0*x+600.0"
+			"1/12800000x^4-1/8000x^3+103/1600x^2-23/2x+600"
 	);
 
 	double trackOffset = -600;
@@ -122,6 +122,16 @@ int main()
 	gui.add(mDownButton);
 	gui.add(mEnter);
 
+	tgui::EditBox::Ptr exprEnter = tgui::EditBox::create();
+	exprEnter->setPosition(50, 110);
+	exprEnter->setWidth(tgui::Layout(200));
+	exprEnter->setText(path.getFunction());
+	exprEnter->onTextChange([&path, &exprEnter]() {
+		path.setFunction(exprEnter->getText().toStdString());
+	});
+
+	gui.add(exprEnter);
+
 	while (window.isOpen())
 	{
 		Event event;
@@ -137,29 +147,17 @@ int main()
 				case Event::KeyPressed:
 					switch (event.key.code)
 					{
-						case Keyboard::Up:
+						case Keyboard::W:
 							trackScale += 0.01;
 							break;
-						case Keyboard::Down:
+						case Keyboard::S:
 							trackScale -= 0.01;
 							break;
-						case Keyboard::Left:
+						case Keyboard::A:
 							trackOffset += 1;
 							break;
-						case Keyboard::Right:
+						case Keyboard::D:
 							trackOffset -= 1;
-							break;
-						case Keyboard::Q:
-							cartObj.setG(cartObj.getG()+10);
-							break;
-						case Keyboard::W:
-							cartObj.setG(cartObj.getG()-10);
-							break;
-						case Keyboard::E:
-							cartObj.setMass(cartObj.getMass()+10);
-							break;
-						case Keyboard::R:
-							cartObj.setMass(cartObj.getMass()-10);
 							break;
 						default: break;
 					}
