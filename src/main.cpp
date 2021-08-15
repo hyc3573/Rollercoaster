@@ -1,4 +1,5 @@
 #include <SFML/System/Clock.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <TGUI/Backends/SFML/GuiSFML.hpp>
 #include <TGUI/Layout.hpp>
@@ -22,13 +23,21 @@
 #include "../include/constants.hpp"
 #include "../include/cart.hpp"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #define SCREENWIDTH 800
 #define SCREENHEIGHT 600
 
 using namespace std;
 using namespace sf;
 
+#ifdef _WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#else
 int main()
+#endif
 {
 	RenderWindow window(VideoMode(SCREENWIDTH, SCREENHEIGHT), "Rollercoaster");
 
@@ -36,7 +45,7 @@ int main()
 	gui.setTarget(window);
 
 	Path path(
-			"1/12800000x^4-1/8000x^3+103/1600x^2-23/2x+600"
+			"1/12800000x^4-1/8000x^3+103/1600x^2-23/2x+800"
 	);
 
 	double trackOffset = -600;
@@ -57,6 +66,21 @@ int main()
 	CircleShape cart(5);
 	cart.setFillColor(Color::Blue);
 	cart.setOrigin(Vector2f(cart.getLocalBounds().width/2, cart.getLocalBounds().height/2));
+
+	RectangleShape barChartOutline(Vector2f(300, 50));
+	barChartOutline.setPosition(400, 50);
+	barChartOutline.setOutlineColor(Color::White);
+	barChartOutline.setOutlineThickness(3);
+	barChartOutline.setFillColor(Color::Transparent);
+
+	RectangleShape barChartKE(Vector2f(300, 50));
+	barChartKE.setPosition(400, 50);
+	barChartKE.setFillColor(Color::Blue);
+
+	RectangleShape barChartPE(Vector2f(300, 50));
+	barChartPE.setOrigin(barChartPE.getLocalBounds().width, barChartPE.getLocalBounds().height);
+	barChartPE.setPosition(1000, 100);
+	barChartPE.setFillColor(Color::Red);
 
 	tgui::Button::Ptr gUpButton = tgui::Button::create();
 	gUpButton->setPosition(50, 50);
@@ -89,7 +113,6 @@ int main()
 	gui.add(gUpButton);
 	gui.add(gDownButton);
 	gui.add(gEnter);
-
 	tgui::Button::Ptr mUpButton = tgui::Button::create();
 	mUpButton->setPosition(50, 80);
 	mUpButton->setWidth(tgui::Layout(30));
@@ -169,6 +192,8 @@ int main()
 
 		dt = dtClock.restart().asSeconds();
 		cartObj.update(dt);
+		barChartPE.setSize(Vector2f(-cartObj.getPE()/cartObj.getTE()*300, barChartPE.getLocalBounds().height));
+		barChartKE.setSize(Vector2f(cartObj.getKE()/cartObj.getTE()*300, barChartKE.getLocalBounds().height));
 
 		//cout << cartObj.getG() << endl;
 
@@ -182,6 +207,10 @@ int main()
 
 		cart.setPosition(cartObj.getX(), -trackScale*path.getHeight(cartObj.getX())-trackOffset-cartOffset);
 		window.draw(cart);
+
+		window.draw(barChartOutline);
+		window.draw(barChartKE);
+		window.draw(barChartPE);
 
 		gui.draw();
 

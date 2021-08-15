@@ -74,6 +74,16 @@ double Cart::getV() const
 	return v;
 }
 
+double Cart::getKE() const
+{
+	return KE;
+}
+
+double Cart::getPE() const
+{
+	return PE;
+}
+
 Path Cart::getPath() const
 {
 	return path;

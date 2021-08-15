@@ -22,6 +22,8 @@ class Cart
 		double getG() const;
 		double getTE() const;
 		double getV() const;
+		double getKE() const;
+		double getPE() const;
 
 		Path getPath() const;
 
