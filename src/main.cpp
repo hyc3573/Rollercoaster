@@ -182,6 +182,9 @@ int main()
 						case Keyboard::D:
 							trackOffset -= 1;
 							break;
+						case Keyboard::R:
+							cartObj.reset();
+							break;
 						default: break;
 					}
 					break;
@@ -192,8 +195,9 @@ int main()
 
 		dt = dtClock.restart().asSeconds();
 		cartObj.update(dt);
-		barChartPE.setSize(Vector2f(-cartObj.getPE()/cartObj.getTE()*300, barChartPE.getLocalBounds().height));
-		barChartKE.setSize(Vector2f(cartObj.getKE()/cartObj.getTE()*300, barChartKE.getLocalBounds().height));
+		cout << cartObj.getPE() << " " << cartObj.getKE() << " " << cartObj.getTE() << endl;
+		barChartPE.setSize(Vector2f(-cartObj.getPE()/(cartObj.getPE()+cartObj.getKE())*300, barChartPE.getLocalBounds().height));
+		barChartKE.setSize(Vector2f(cartObj.getKE()/(cartObj.getPE()+cartObj.getKE())*300, barChartKE.getLocalBounds().height));
 
 		//cout << cartObj.getG() << endl;
 

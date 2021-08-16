@@ -7,11 +7,11 @@
 class Cart
 {
 	public:
-		Cart(double mass, double g, double x0, const Path& path) : mass(mass), g(g), x0(x0), path(path), x(0), lastX(0), KE(0), TE(0), PE(0), v(0), dir(0) {reset();};
+		Cart(double mass, double g, double x0, Path& path) : mass(mass), g(g), x0(x0), path(path), x(0), lastX(0), KE(0), TE(0), PE(0), v(0), dir(0) {reset();};
 
 		void setMass(double mass);
 		void setG(double g);
-		void setPath(const Path& path);
+		void setPath(Path& path);
 
 		void calcTE();
 		void reset();
@@ -40,7 +40,7 @@ class Cart
 		double TE;
 		double PE;
 
-		Path path;
+		Path& path;
 };
 
 double calcPE(const Cart& cart);

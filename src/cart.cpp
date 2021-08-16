@@ -43,7 +43,7 @@ void Cart::setMass(double mass)
 	}
 }
 
-void Cart::setPath(const Path &path)
+void Cart::setPath(Path &path)
 {
 	this->path = path;
 	calcTE();
