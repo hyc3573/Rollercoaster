@@ -1,5 +1,8 @@
 #include <SFML/System/Clock.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <TGUI/Backends/SFML/GuiSFML.hpp>
 #include <TGUI/Layout.hpp>
@@ -17,11 +20,11 @@
 #include <TGUI/TGUI.hpp>
 #include <string>
 
-#include "../include/exprtk.hpp"
+#include "exprtk.hpp"
 
-#include "../include/path.hpp"
-#include "../include/constants.hpp"
-#include "../include/cart.hpp"
+#include "path.hpp"
+#include "constants.hpp"
+#include "cart.hpp"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -41,6 +44,15 @@ int main()
 {
 	RenderWindow window(VideoMode(SCREENWIDTH, SCREENHEIGHT), "Rollercoaster");
 
+	Color backGroundColor = Color::White;
+	Color colorOne = Color(0x21, 0x96, 0xf3);
+	Color colorOneLight = Color(0x6e, 0xc6, 0xff);
+	Color colorOneDark = Color(0x00, 0x69, 0xc0);
+	Color colorTwo = Color(0xe9, 0x1e, 0x63);
+	Color colorTwoLight = Color(0xff, 0x60, 0x90);
+	Color colorTwoDark = Color(0xb0, 0x00, 0x3a);
+	Color textColor = Color::Black;
+
 	tgui::GuiSFML gui;
 	gui.setTarget(window);
 
@@ -51,7 +63,7 @@ int main()
 	double trackOffset = -600;
 	double trackScale = 1;
 	double cartOffset = 0;
-	double plotInterval = 0.1f;
+	double plotInterval = 0.01f;
 
 	Cart cartObj(1, 100, 0, path);
 
@@ -59,28 +71,28 @@ int main()
 
 	Clock dtClock;
 
-	CircleShape dot(2);
-	dot.setFillColor(Color::Red);
+	CircleShape dot(4);
+	dot.setFillColor(colorTwo);
 	dot.setOrigin(Vector2f(dot.getLocalBounds().width/2, dot.getLocalBounds().height/2));
 
 	CircleShape cart(5);
-	cart.setFillColor(Color::Blue);
+	cart.setFillColor(colorOne);
 	cart.setOrigin(Vector2f(cart.getLocalBounds().width/2, cart.getLocalBounds().height/2));
 
-	RectangleShape barChartOutline(Vector2f(300, 50));
+	RectangleShape barChartOutline(Vector2f(300, 25));
 	barChartOutline.setPosition(400, 50);
-	barChartOutline.setOutlineColor(Color::White);
+	barChartOutline.setOutlineColor(textColor);
 	barChartOutline.setOutlineThickness(3);
 	barChartOutline.setFillColor(Color::Transparent);
 
-	RectangleShape barChartKE(Vector2f(300, 50));
+	RectangleShape barChartKE(Vector2f(300, 25));
 	barChartKE.setPosition(400, 50);
-	barChartKE.setFillColor(Color::Blue);
+	barChartKE.setFillColor(colorOne);
 
-	RectangleShape barChartPE(Vector2f(300, 50));
+	RectangleShape barChartPE(Vector2f(300, 25));
 	barChartPE.setOrigin(barChartPE.getLocalBounds().width, barChartPE.getLocalBounds().height);
-	barChartPE.setPosition(1000, 100);
-	barChartPE.setFillColor(Color::Red);
+	barChartPE.setPosition(1000, 75);
+	barChartPE.setFillColor(colorTwo);
 
 	tgui::Button::Ptr gUpButton = tgui::Button::create();
 	gUpButton->setPosition(50, 50);
@@ -195,13 +207,13 @@ int main()
 
 		dt = dtClock.restart().asSeconds();
 		cartObj.update(dt);
-		cout << cartObj.getPE() << " " << cartObj.getKE() << " " << cartObj.getTE() << endl;
+		//cout << cartObj.getPE() << " " << cartObj.getKE() << " " << cartObj.getTE() << endl;
 		barChartPE.setSize(Vector2f(-cartObj.getPE()/(cartObj.getPE()+cartObj.getKE())*300, barChartPE.getLocalBounds().height));
 		barChartKE.setSize(Vector2f(cartObj.getKE()/(cartObj.getPE()+cartObj.getKE())*300, barChartKE.getLocalBounds().height));
 
 		//cout << cartObj.getG() << endl;
 
-		window.clear(Color::Black);
+		window.clear(backGroundColor);
 
 		for (double i=0;i<SCREENWIDTH;i+=plotInterval)
 		{
